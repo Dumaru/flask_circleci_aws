@@ -55,14 +55,12 @@ workflows:
       - hold_prod:
           type: approval
           requires:
-            - run_tests
             - heroku/deploy-via-git
           filters:
             branches:
               only: master
       - deploy_prod: # Use the pre-configured job, deploy-via-git
           requires:
-            - run_tests
             - hold_prod
           filters:
             branches:
