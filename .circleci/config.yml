@@ -45,13 +45,14 @@ workflows:
           type: approval
           requires:
             - run_tests
+            - heroku/deploy-via-git
           filters:
             branches:
               only: master
       - heroku/deploy-via-git: # Use the pre-configured job, deploy-via-git
-        environment:
-          app-name: $HEROKU_APP_NAME_DEV
-          api-key: $HEROKU_API_KEY
+          environment:
+            app-name: $HEROKU_APP_NAME_DEV
+            api-key: $HEROKU_API_KEY
           requires:
             - run_tests
             - hold_prod
