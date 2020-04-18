@@ -53,6 +53,7 @@ workflows:
           app-name: $HEROKU_APP_NAME_DEV
           api-key: $HEROKU_API_KEY
           requires:
+            - run_tests
             - hold_prod
           filters:
             branches:
