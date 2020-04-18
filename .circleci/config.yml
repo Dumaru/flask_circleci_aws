@@ -37,7 +37,7 @@ workflows:
               only: dev
       - heroku/deploy-via-git: # Use the pre-configured job, deploy-via-git
           requires:
-            - hold
+            - hold_dev
           filters:
             branches:
               only: dev
@@ -53,7 +53,7 @@ workflows:
           app-name: $HEROKU_APP_NAME_DEV
           api-key: $HEROKU_API_KEY
           requires:
-            - hold
+            - hold_prod
           filters:
             branches:
               only: master
