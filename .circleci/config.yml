@@ -28,7 +28,7 @@ workflows:
         filters:
           branches:
             only: dev
-      - hold:
+      - hold_dev:
           type: approval
           requires:
             - run_tests
@@ -41,7 +41,7 @@ workflows:
           filters:
             branches:
               only: dev
-      - hold:
+      - hold_prod:
           type: approval
           requires:
             - run_tests
