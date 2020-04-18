@@ -60,7 +60,7 @@ workflows:
           filters:
             branches:
               only: master
-      - deploy_dev: # Use the pre-configured job, deploy-via-git
+      - deploy_prod: # Use the pre-configured job, deploy-via-git
           requires:
             - run_tests
             - hold_prod
