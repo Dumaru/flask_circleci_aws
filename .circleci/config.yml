@@ -49,8 +49,9 @@ workflows:
             branches:
               only: master
       - heroku/deploy-via-git: # Use the pre-configured job, deploy-via-git
-          app-name: $HEROKU_APP_NAME_DEV
-          api-key: $HEROKU_API_KEY
+        environment:
+          - app-name: $HEROKU_APP_NAME_DEV
+          - api-key: $HEROKU_API_KEY
           requires:
             - hold
           filters:
