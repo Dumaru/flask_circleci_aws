@@ -38,20 +38,20 @@ workflows:
       - run_tests:
         filters:
           branches:
-            only: dev
+            only: master
       - hold_dev:
           type: approval
           requires:
             - run_tests
           filters:
             branches:
-              only: dev
+              only: master
       - heroku/deploy-via-git: # Use the pre-configured job, deploy-via-git
           requires:
             - hold_dev
           filters:
             branches:
-              only: dev
+              only: master
       - hold_prod:
           type: approval
           requires:
