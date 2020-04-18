@@ -18,6 +18,17 @@ jobs:
           path: test-reports
       - store_artifacts:
           path: test-reports
+
+  deploy_prod:
+    docker:
+      - image: circleci/python:3.7.4
+    steps:
+      - checkout
+      - run:
+          name: Deploy Master to Heroku
+          command: |
+            git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME_PROD.git master
+
 orbs:
   heroku: circleci/heroku@1.0.1 # Invoke the Heroku orb
 
@@ -27,17 +38,32 @@ workflows:
       - run_tests:
         filters:
           branches:
-            only: master
-      - hold:
+            only: dev
+      - hold_dev:
           type: approval
           requires:
             - run_tests
           filters:
             branches:
-              only: master
+              only: dev
       - heroku/deploy-via-git: # Use the pre-configured job, deploy-via-git
           requires:
-            - hold
+            - hold_dev
+          filters:
+            branches:
+              only: dev
+      - hold_prod:
+          type: approval
+          requires:
+            - run_tests
+            - heroku/deploy-via-git
+          filters:
+            branches:
+              only: master
+      - deploy_prod: # Use the pre-configured job, deploy-via-git
+          requires:
+            - run_tests
+            - hold_prod
           filters:
             branches:
               only: master
