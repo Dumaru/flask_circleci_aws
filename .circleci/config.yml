@@ -33,9 +33,15 @@ jobs:
       - run: docker push dumaru/flask_app:dev
 
 workflows:
-  deploy:
+  test_push_image:
     jobs:
+      - run_tests:
+        filters:
+          branches:
+            only: dev
       - build_image:
+        requires:
+          - run_tests
         filters:
           branches:
             only: dev
