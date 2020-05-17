@@ -18,7 +18,6 @@ jobs:
           path: test-reports
       - store_artifacts:
           path: test-reports
-
   build_image:
     machine: true
     steps:
@@ -40,8 +39,8 @@ workflows:
           branches:
             only: dev
       - build_image:
-        requires:
-          - run_tests
         filters:
           branches:
             only: dev
+          requires:
+            - run_tests
