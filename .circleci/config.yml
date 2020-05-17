@@ -28,9 +28,9 @@ jobs:
       - run: |
           echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
       # build the application image
-      - run: docker build -t dumaru/flask_app:$dev .
+      - run: docker build -t dumaru/flask_app:dev .
       # deploy the image
-      - run: docker push dumaru/flask_app:$dev
+      - run: docker push dumaru/flask_app:dev
 
 workflows:
   deploy:
