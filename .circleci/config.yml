@@ -51,7 +51,7 @@ jobs:
           resource-file-path: deployment/deployment.yaml
           resource-name: deployment/nginx0-deployment
       - kubernetes/create-or-update-resource:
-          get-rollout-status: true
+          # get-rollout-status: true
           resource-file-path: deployment/service.yaml
           resource-name: service/my-nginx
 workflows:
