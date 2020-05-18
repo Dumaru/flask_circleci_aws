@@ -1,4 +1,8 @@
 version: 2.1
+orbs:
+  aws-eks: circleci/aws-eks@0.2.7
+  kubernetes: circleci/kubernetes@0.4.0
+
 jobs:
   run_tests:
     docker:
@@ -30,7 +34,26 @@ jobs:
       - run: docker build -t dumaru/flask_app:dev .
       # deploy the image
       - run: docker push dumaru/flask_app:dev
-
+  create-deployment:
+    executor: aws-eks/python3
+    parameters:
+      cluster-name:
+        description: |
+          Name of the EKS cluster
+        type: string
+    steps:
+      - checkout
+      - aws-eks/update-kubeconfig-with-authenticator:
+          cluster-name: << parameters.cluster-name >>
+          install-kubectl: true
+      - kubernetes/create-or-update-resource:
+          get-rollout-status: true
+          resource-file-path: deployment/deployment.yaml
+          resource-name: deployment/my-deployment
+      - kubernetes/create-or-update-resource:
+          get-rollout-status: true
+          resource-file-path: deployment/service.yaml
+          resource-name: service/my-service
 workflows:
   test_push_image:
     jobs:
@@ -39,8 +62,15 @@ workflows:
           branches:
             only: dev
       - build_image:
-        filters:
-          branches:
-            only: dev
           requires:
             - run_tests
+          filters:
+            branches:
+              only: dev
+      - create-deployment:
+          requires:
+            - build_image
+          cluster-name: rmCluster
+          filters:
+            branches:
+              only: dev
