@@ -1,21 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx0-deployment
+  name: backend
   labels:
-    app: nginx0-deployment
+    app: flask-app
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: nginx0
+      app: flask-app
+      tier: backend
   template:
     metadata:
       labels:
-        app: nginx0
+        app: flask-app
+        tier: backend
     spec:
       containers:
-        - name: nginx
+        - name: flask-app
           image: dumaru/flask_app:dev
           ports:
-            - containerPort: 80
+            - name: http
+              containerPort: 80
