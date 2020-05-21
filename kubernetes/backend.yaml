@@ -1,3 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-gateway-svc
+spec:
+  selector:
+    app: flask-app
+    tier: backend
+    track: dev
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -21,7 +35,6 @@ spec:
       containers:
         - name: flask-app
           image: dumaru/flask_app:dev
-          # image: "gcr.io/google-samples/hello-go-gke:1.0"
           ports:
             - name: http
               containerPort: 80

@@ -16,7 +16,6 @@ configMapGenerator:
     files:
       - conf/nginx-default.conf
 resources:
-  - backend-service.yaml
-  - backend-deployment.yaml
+  - backend.yaml
   # - service-nodeport.yaml
-  - frontend-deployment.yaml
+  - frontend.yaml
