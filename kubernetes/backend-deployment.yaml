@@ -5,16 +5,18 @@ metadata:
   labels:
     app: flask-app
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: flask-app
       tier: backend
+      track: dev
   template:
     metadata:
       labels:
         app: flask-app
         tier: backend
+        track: dev
     spec:
       containers:
         - name: flask-app

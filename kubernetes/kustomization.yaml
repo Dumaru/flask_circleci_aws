@@ -10,12 +10,12 @@ generatorOptions:
   # disableNameSuffixHash is true disables the default behavior of adding a
   # suffix to the names of generated resources that is a hash of
   # the resource contents.
-  disableNameSuffixHash: false
+  disableNameSuffixHash: true
 configMapGenerator:
   - name: nginx-config
     files:
       - conf/nginx-default.conf
 resources:
-  - backend_deployment.yaml
+  - backend-deployment.yaml
   - backend-service.yaml
   - frontend-deployment.yaml
