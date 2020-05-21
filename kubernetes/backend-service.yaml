@@ -6,11 +6,8 @@ spec:
   selector:
     app: flask-app
     tier: backend
+    track: dev
   ports:
     - protocol: TCP
       port: 80
-      targetPort: http
-# status:
-#   loadBalancer:
-#     ingress:
-#       - hostname: a1763d0f385014467970064ceb794b79-1060176734.us-east-2.elb.amazonaws.com
+      targetPort: 80

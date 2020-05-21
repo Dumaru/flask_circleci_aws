@@ -21,6 +21,7 @@ spec:
       containers:
         - name: flask-app
           image: dumaru/flask_app:dev
+          # image: "gcr.io/google-samples/hello-go-gke:1.0"
           ports:
             - name: http
               containerPort: 80
