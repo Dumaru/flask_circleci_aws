@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-gateway-svc-2
+spec:
+  # type: LoadBalancer
+  type: ClusterIP
+  selector: ### should match your labels defined for your flask pods
+    app: back-app-2
+    tier: backend
+    track: dev
+  ports:
+    - protocol: TCP
+      targetPort: 80 ### port flask app listens on
+      port: 80 ### port on which you want to expose it within your cluster
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: back-app-nginx
+  labels:
+    app: back-app-2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: back-app-2
+      tier: backend
+      track: dev
+  template:
+    metadata:
+      labels:
+        app: back-app-2
+        tier: backend
+        track: dev
+    spec:
+      containers:
+        - name: back-app-2
+          image: nginx
+          ports:
+            - name: http
+              containerPort: 80 ### container's port to expose
+              protocol: TCP
