@@ -3,14 +3,15 @@ kind: Service
 metadata:
   name: backend-gateway-svc
 spec:
-  selector:
+  type: ClusterIP
+  selector: ### should match your labels defined for your angular pods
     app: flask-app
     tier: backend
     track: dev
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 80
+      targetPort: 5000 ### port flask app listens on
+      port: 80 ### port on which you want to expose it within your cluster
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -37,4 +38,4 @@ spec:
           image: dumaru/flask_app:dev
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 5000
