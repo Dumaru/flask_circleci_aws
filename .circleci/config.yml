@@ -47,7 +47,7 @@ jobs:
           cluster-name: << parameters.cluster-name >>
           install-kubectl: true
       - kubernetes/create-or-update-resource:
-          resource-file-path: kubernetes
+          resource-file-path: kubernetes ### File Path os Kustomization.yaml
           resource-name: deployment/frontend
           kustomize: true
           get-rollout-status: true

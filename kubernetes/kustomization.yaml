@@ -23,4 +23,5 @@ resources:
   # - namespace.yaml
   - backend.yaml
   - backend_2.yaml
+  # - frontend-ingress.yaml
   - frontend.yaml

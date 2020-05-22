@@ -17,7 +17,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: back-app-nginx
+  name: back-app-2
   labels:
     app: back-app-2
 spec:

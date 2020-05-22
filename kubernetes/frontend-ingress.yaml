@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    # kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "12h"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false" ###to deactivate Https redirection since we are not specifying a host
+  name: frontend-ingress
+spec:
+  backend:
+    serviceName: default-http-backend
+    servicePort: 80
+  rules:
+    - http:
+        paths:
+          - path: /v1
+            backend:
+              serviceName: backend-gateway-svc
+              servicePort: 80
+          - path: /v2
+            backend:
+              serviceName: backend-gateway-svc-2
+              servicePort: 80
