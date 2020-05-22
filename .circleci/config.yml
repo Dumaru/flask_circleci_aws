@@ -55,19 +55,19 @@ jobs:
 workflows:
   test_push_image:
     jobs:
-      # - run_tests:
-      #   filters:
-      #     branches:
-      #       only: dev
-      # - build_push_image:
-      #     requires:
-      #       - run_tests
-      #     filters:
-      #       branches:
-      #         only: dev
+      - run_tests:
+        filters:
+          branches:
+            only: dev
+      - build_push_image:
+          requires:
+            - run_tests
+          filters:
+            branches:
+              only: dev
       - create-deployment:
-          # requires:
-          # - build_push_image
+          requires:
+            - build_push_image
           cluster-name: rmCluster
           filters:
             branches:

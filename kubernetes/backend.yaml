@@ -10,7 +10,7 @@ spec:
     track: dev
   ports:
     - protocol: TCP
-      targetPort: 5000 ### port flask app listens on
+      targetPort: 80 ### port flask app listens on
       port: 80 ### port on which you want to expose it within your cluster
 ---
 apiVersion: apps/v1
@@ -38,4 +38,4 @@ spec:
           image: dumaru/flask_app:dev
           ports:
             - name: http
-              containerPort: 5000
+              containerPort: 80 ### container's port to expose
