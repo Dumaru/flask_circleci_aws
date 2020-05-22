@@ -4,7 +4,7 @@ metadata:
   name: backend-gateway-svc
 spec:
   type: ClusterIP
-  selector: ### should match your labels defined for your angular pods
+  selector: ### should match your labels defined for your flask pods
     app: flask-app
     tier: backend
     track: dev
