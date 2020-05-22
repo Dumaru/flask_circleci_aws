@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+data:
+  nginx-default.conf: "
+    \n
+    upstream backend {
+    # DNS name given to the backend Service\n
+    server backend-gateway-svc;
+    }\n
+
+    server {
+    listen 80;\n
+
+    location / {
+    proxy_pass http://backend;
+    }\n
+
+    location /v1 {
+    proxy_pass http://backend;
+    }\n
+
+    location /v2 {
+    proxy_pass http://backend;
+    }\n
+    }
+    "
