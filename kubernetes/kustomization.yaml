@@ -14,6 +14,7 @@ generatorOptions:
   # suffix to the names of generated resources that is a hash of
   # the resource contents.
   disableNameSuffixHash: true
+
 configMapGenerator:
   - name: nginx-config
     files:

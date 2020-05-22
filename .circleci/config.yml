@@ -48,12 +48,9 @@ jobs:
           install-kubectl: true
       - kubernetes/create-or-update-resource:
           get-rollout-status: true
-          resource-file-path: deployment/deployment.yaml
-          resource-name: deployment/nginx0-deployment
-      - kubernetes/create-or-update-resource:
-          # get-rollout-status: true
-          resource-file-path: deployment/service.yaml
-          resource-name: service/my-nginx
+          resource-file-path: kubernetes/kustomization.yaml
+          resource-name: deployment/frontend
+
 workflows:
   test_push_image:
     jobs:
