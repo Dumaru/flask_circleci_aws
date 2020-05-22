@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   aws-eks: circleci/aws-eks@0.2.7
-  kubernetes: circleci/kubernetes@0.4.0
+  kubernetes: circleci/kubernetes@0.11.0
 
 jobs:
   run_tests:
@@ -22,7 +22,7 @@ jobs:
           path: test-reports
       - store_artifacts:
           path: test-reports
-  build_image:
+  build_push_image:
     machine: true
     steps:
       - checkout
@@ -43,14 +43,23 @@ jobs:
         type: string
     steps:
       - checkout
+      - run: |
+          export opsys=linux
+          curl -s https://api.github.com/repos/kubernetes-sigs/kustomize/releases |grep browser_download |grep download/kustomize |grep -m 1 $opsys |cut -d '"' -f 4 |xargs curl -O -L
+          tar xzf ./kustomize_v*_${opsys}_amd64.tar.gz
+          mkdir -p ${HOME}/bin
+          mv kustomize ${HOME}/bin/kustomize
+          chmod u+x ${HOME}/bin/kustomize
+          export PATH=$PATH:${HOME}/bin
       - aws-eks/update-kubeconfig-with-authenticator:
           cluster-name: << parameters.cluster-name >>
           install-kubectl: true
       - kubernetes/create-or-update-resource:
-          get-rollout-status: true
-          resource-file-path: kubernetes/kustomization.yaml
+          resource-file-path: kubernetes
           resource-name: deployment/frontend
-
+          kustomize: true
+          get-rollout-status: true
+          show-kubectl-command: true
 workflows:
   test_push_image:
     jobs:
@@ -58,7 +67,7 @@ workflows:
         filters:
           branches:
             only: dev
-      - build_image:
+      - build_push_image:
           requires:
             - run_tests
           filters:
@@ -66,7 +75,7 @@ workflows:
               only: dev
       - create-deployment:
           requires:
-            - build_image
+            - build_push_image
           cluster-name: rmCluster
           filters:
             branches:
