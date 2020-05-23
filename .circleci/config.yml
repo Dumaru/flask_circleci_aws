@@ -31,9 +31,9 @@ jobs:
       - run: |
           echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
       # build the application image
-      - run: docker build -t dumaru/flask_app:dev .
+      - run: docker build -t dumaru/flask_app:dev_1.0 .
       # deploy the image
-      - run: docker push dumaru/flask_app:dev
+      - run: docker push dumaru/flask_app:dev_1.0
   create-deployment:
     executor: aws-eks/python3
     parameters:
@@ -67,7 +67,7 @@ workflows:
               only: dev
       - create-deployment:
           requires:
-          - build_push_image
+            - build_push_image
           cluster-name: rmCluster
           filters:
             branches:
