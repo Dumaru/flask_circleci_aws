@@ -31,9 +31,9 @@ jobs:
       - run: |
           echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
       # build the application image
-      - run: docker build -t dumaru/flask_app:prod .
+      - run: docker build -t dumaru/flask_app:prod_1.0 .
       # deploy the image
-      - run: docker push dumaru/flask_app:prod
+      - run: docker push dumaru/flask_app:prod_1.0
   create-deployment:
     executor: aws-eks/python3
     parameters:
@@ -55,18 +55,18 @@ jobs:
 workflows:
   test_push_image:
     jobs:
-      - run_tests: 
+      - run_tests:
         filters:
           branches:
             only: master
       - hold:
           requires:
-           - run_tests
+            - run_tests
           type: approval
           filters:
             branches:
               only: master
-      - build_push_image:      
+      - build_push_image:
           requires:
             - hold
           filters:
@@ -74,7 +74,7 @@ workflows:
               only: master
       - create-deployment:
           requires:
-          - build_push_image
+            - build_push_image
           cluster-name: clusterpro
           filters:
             branches:

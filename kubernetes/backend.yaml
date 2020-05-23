@@ -35,7 +35,7 @@ spec:
     spec:
       containers:
         - name: flask-app
-          image: dumaru/flask_app:prod
+          image: dumaru/flask_app:prod_1.0
           ports:
             - name: http
               containerPort: 80 ### container's port to expose
