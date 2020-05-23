@@ -68,7 +68,7 @@ workflows:
       - create-deployment:
           # requires:
           # - build_push_image
-          cluster-name: clusterseg
+          cluster-name: clusterpro
           filters:
             branches:
               only: master
