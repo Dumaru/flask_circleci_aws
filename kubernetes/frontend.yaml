@@ -6,7 +6,7 @@ spec:
   selector: ### should match your labels defined for your nginx pods
     app: flask-app
     tier: frontend
-    track: dev
+    track: prod
   ports:
     - protocol: TCP
       targetPort: 80 ### port flask app listens on
@@ -23,13 +23,13 @@ spec:
     matchLabels:
       app: flask-app
       tier: frontend
-      track: dev
+      track: prod
   template:
     metadata:
       labels:
         app: flask-app
         tier: frontend
-        track: dev
+        track: prod
     spec:
       containers:
         - name: nginx

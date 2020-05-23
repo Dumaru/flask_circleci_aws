@@ -7,7 +7,7 @@ spec:
   selector: ### should match your labels defined for your flask pods
     app: flask-app
     tier: backend
-    track: dev
+    track: prod
   ports:
     - protocol: TCP
       targetPort: 80 ### port flask app listens on
@@ -25,17 +25,17 @@ spec:
     matchLabels:
       app: flask-app
       tier: backend
-      track: dev
+      track: prod
   template:
     metadata:
       labels:
         app: flask-app
         tier: backend
-        track: dev
+        track: prod
     spec:
       containers:
         - name: flask-app
-          image: dumaru/flask_app:dev
+          image: dumaru/flask_app:prod
           ports:
             - name: http
               containerPort: 80 ### container's port to expose
