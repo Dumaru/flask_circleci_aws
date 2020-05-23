@@ -1,0 +1,27 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# namespace: development
+
+generatorOptions:
+  # labels to add to all generated resources
+  labels:
+    kustomize.generated.resources: generated_dev
+  # annotations to add to all generated resources
+  annotations:
+    kustomize.generated.resource: generated_dev
+  # disableNameSuffixHash is true disables the default behavior of adding a
+  # suffix to the names of generated resources that is a hash of
+  # the resource contents.
+  disableNameSuffixHash: true
+
+configMapGenerator:
+  - name: nginx-config
+    files:
+      - conf/nginx-default.conf
+resources:
+  # - namespace.yaml
+  - backend.yaml
+  - backend_2.yaml
+  # - frontend-ingress.yaml
+  - frontend.yaml

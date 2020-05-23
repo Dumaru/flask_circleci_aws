@@ -1,4 +1,8 @@
 version: 2.1
+orbs:
+  aws-eks: circleci/aws-eks@0.2.7
+  kubernetes: circleci/kubernetes@0.11.0
+
 jobs:
   run_tests:
     docker:
@@ -18,50 +22,53 @@ jobs:
           path: test-reports
       - store_artifacts:
           path: test-reports
-
-  deploy_prod:
-    docker:
-      - image: circleci/python:3.7.4
+  build_push_image:
+    machine: true
     steps:
       - checkout
-      - run:
-          name: Deploy Master to Heroku
-          command: |
-            git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME_PROD.git master
-
-orbs:
-  heroku: circleci/heroku@1.0.1 # Invoke the Heroku orb
-
+      # start proprietary DB using private Docker image
+      # with credentials stored in the UI
+      - run: |
+          echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
+      # build the application image
+      - run: docker build -t dumaru/flask_app:dev .
+      # deploy the image
+      - run: docker push dumaru/flask_app:dev
+  create-deployment:
+    executor: aws-eks/python3
+    parameters:
+      cluster-name:
+        description: |
+          Name of the EKS cluster
+        type: string
+    steps:
+      - checkout
+      - aws-eks/update-kubeconfig-with-authenticator:
+          cluster-name: << parameters.cluster-name >>
+          install-kubectl: true
+      - kubernetes/create-or-update-resource:
+          resource-file-path: kubernetes ### File Path os Kustomization.yaml
+          resource-name: deployment/frontend
+          kustomize: true
+          get-rollout-status: true
+          show-kubectl-command: true
 workflows:
-  deploy:
+  test_push_image:
     jobs:
-      - run_tests:
-        filters:
-          branches:
-            only: master
-      - hold_dev:
-          type: approval
-          requires:
-            - run_tests
+      # - run_tests:
+      #   filters:
+      #     branches:
+      #       only: dev
+      # - build_push_image:
+      #     requires:
+      #       - run_tests
+      #     filters:
+      #       branches:
+      #         only: dev
+      - create-deployment:
+          # requires:
+          # - build_push_image
+          cluster-name: rmCluster
           filters:
             branches:
-              only: master
-      - heroku/deploy-via-git: # Use the pre-configured job, deploy-via-git
-          requires:
-            - hold_dev
-          filters:
-            branches:
-              only: master
-      - hold_prod:
-          type: approval
-          requires:
-            - heroku/deploy-via-git
-          filters:
-            branches:
-              only: master
-      - deploy_prod: # Use the pre-configured job, deploy-via-git
-          requires:
-            - hold_prod
-          filters:
-            branches:
-              only: master
+              only: dev

@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-svc
+spec:
+  selector: ### should match your labels defined for your nginx pods
+    app: flask-app
+    tier: frontend
+    track: dev
+  ports:
+    - protocol: TCP
+      targetPort: 80 ### port flask app listens on
+      port: 80 ### port on which you want to expose it within your cluster
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flask-app
+      tier: frontend
+      track: dev
+  template:
+    metadata:
+      labels:
+        app: flask-app
+        tier: frontend
+        track: dev
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+          ports:
+            - containerPort: 80
+            - containerPort: 443
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/conf.d
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/usr/sbin/nginx", "-s", "quit"]
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: nginx-config
+            items:
+              - key: nginx-default.conf
+                path: default.conf
