@@ -59,6 +59,13 @@ workflows:
         filters:
           branches:
             only: master
+      - aprobacion:
+          requires:
+           - run_tests
+          type: approval
+        filters:
+          branches:
+            only: master
       - build_push_image:
           requires:
             - run_tests
