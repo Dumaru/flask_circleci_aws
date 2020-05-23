@@ -55,19 +55,19 @@ jobs:
 workflows:
   test_push_image:
     jobs:
-      # - run_tests:
-      #   filters:
-      #     branches:
-      #       only: master
-      # - build_push_image:
-      #     requires:
-      #       - run_tests
-      #     filters:
-      #       branches:
-      #         only: master
+      - run_tests: 
+        filters:
+          branches:
+            only: master
+      - build_push_image:
+          requires:
+            - run_tests
+          filters:
+            branches:
+              only: master
       - create-deployment:
-          # requires:
-          # - build_push_image
+          requires:
+          - build_push_image
           cluster-name: clusterpro
           filters:
             branches:
